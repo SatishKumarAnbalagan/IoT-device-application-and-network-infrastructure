@@ -1,0 +1,498 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Base Networking Stack for IOT Network\n",
+  "Parameters": {
+    "STACKNAME": {
+      "Description": "Stack Name",
+      "Type": "String"
+    },
+    "APPENDER": {
+      "Description": "Name used in resource names",
+      "Type": "String",
+      "Default": "test"
+    },
+    "VpcCIDR": {
+      "Description": "VPC CIDR Block",
+      "Type": "String",
+      "Default": "10.0.0.0/16"
+    },
+    "PublicSubnet1CIDR": {
+      "Description": "Public subnet 1 CIDR Block",
+      "Type": "String"
+    },
+    "PublicSubnet2CIDR" : {
+      "Description": "Public subnet 2 CIDR Block",
+      "Type": "String"
+    },
+    "PublicSubnet3CIDR" : {
+      "Description": "Public subnet 3 CIDR Block",
+      "Type": "String"
+    },
+    "PublicSubnet4CIDR" : {
+      "Description": "Public subnet 4 CIDR Block",
+      "Type": "String"
+    },
+    "PrivateSubnet1CIDR": {
+      "Description": "Private subnet 1 CIDR Block",
+      "Type": "String"
+    },
+    "PrivateSubnet2CIDR": {
+      "Description": "Private subnet 2 CIDR Block",
+      "Type": "String"
+    },
+    "VPCNAME": {
+      "Description": "VPC Name",
+      "Type": "String",
+      "Default": "vpc"
+    },
+    "IGNAME": {
+      "Description": "Internet Gateway Name",
+      "Type": "String",
+      "Default": "ig"
+    },
+    "PBRTNAME": {
+      "Description": "Public RouteTable Name",
+      "Type": "String",
+      "Default": "pb-rt"
+    },
+    "PBSN1NAME": {
+      "Description": "Public Subnet Name 1",
+      "Type": "String"
+    },
+    "PBSN2NAME": {
+      "Description": "Public Subnet Name 2",
+      "Type": "String"
+    },
+    "PBSN3NAME": {
+      "Description": "Public Subnet Name 3",
+      "Type": "String"
+    },
+    "PBSN4NAME": {
+      "Description": "Public Subnet Name 4",
+      "Type": "String"
+    },
+    "PRSN1NAME": {
+      "Description": "Private Subnet Name 1",
+      "Type": "String"
+    },
+    "PRSN2NAME": {
+      "Description": "Private Subnet Name 1",
+      "Type": "String"
+    },
+    "PR1RTNAME": {
+      "Description": "Private RouteTable Name 1",
+      "Type": "String"
+    },
+    "PR2RTNAME": {
+      "Description": "Private RouteTable Name 2",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": {
+          "Ref": "VpcCIDR"
+        },
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "-",
+                [
+                  {
+                    "Ref": "STACKNAME"
+                  },
+                  {
+                    "Ref": "APPENDER"
+                  },
+                  {
+                    "Ref": "VPCNAME"
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "-",
+                [
+                  {
+                    "Ref": "STACKNAME"
+                  },
+                  {
+                    "Ref": "APPENDER"
+                  },
+                  {
+                    "Ref": "IGNAME"
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "InternetGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        },
+        "VpcId": {
+          "Ref": "VPC"
+        }
+      }
+    },
+    "PublicSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "0",
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Ref": "PublicSubnet1CIDR"
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PBSN1NAME"
+            }
+          }
+        ]
+      }
+    },
+    "PublicSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "1",
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Ref": "PublicSubnet2CIDR"
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PBSN2NAME"
+            }
+          }
+        ]
+      }
+    },
+    "PublicSubnet3": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "3",
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Ref": "PublicSubnet3CIDR"
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PBSN3NAME"
+            }
+          }
+        ]
+      }
+    },
+    "PublicSubnet4": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "4",
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Ref": "PublicSubnet4CIDR"
+        },
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PBSN4NAME"
+            }
+          }
+        ]
+      }
+    }, 
+    "PrivateSubnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "5",
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Ref": "PrivateSubnet1CIDR"
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PRSN1NAME"
+            }
+          }
+        ]
+      }
+    },
+    "PrivateSubnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "AvailabilityZone": {
+          "Fn::Select": [
+            "5",
+            {
+              "Fn::GetAZs": ""
+            }
+          ]
+        },
+        "CidrBlock": {
+          "Ref": "PrivateSubnet2CIDR"
+        },
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PRSN2NAME"
+            }
+          }
+        ]
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "-",
+                [
+                  {
+                    "Ref": "STACKNAME"
+                  },
+                  {
+                    "Ref": "APPENDER"
+                  },
+                  {
+                    "Ref": "PBRTNAME"
+                  }
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "DefaultPublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "InternetGatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PrivateRouteTable1": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Ref": "PR1RTNAME"
+            }
+          }
+        ]
+      }
+    },
+    "PublicSubnet1RouteTableAssoc": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnet1"
+        }
+      }
+    },
+    "PublicSubnet2RouteTableAssoc": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnet2"
+        }
+      }
+    },
+    "PublicSubnet3RouteTableAssoc": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnet3"
+        }
+      }
+    },
+    "PrivateSubnet1RouteTableAssoc": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable1"
+        },
+        "SubnetId": {
+          "Ref": "PrivateSubnet1"
+        }
+      }
+    },
+    "PrivateSubnet2RouteTableAssoc": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PrivateRouteTable1"
+        },
+        "SubnetId": {
+          "Ref": "PrivateSubnet2"
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "StackVPC":{
+       "Description":"VPC ID",
+       "Value":{
+          "Ref":"VPC"
+       },
+       "Export":{
+          "Name":"IOT-VPCID"
+       }
+    },
+    "PublicSubnet1":{
+       "Description":"Public Subnet ID",
+       "Value":{
+          "Ref":"PublicSubnet1"
+       },
+       "Export":{
+          "Name":"IOT-PublicSubnet1"
+       }
+    },
+    "PublicSubnet2": {
+      "Description": "Subnet 2 ID",
+      "Value": {
+        "Ref": "PublicSubnet2"
+      },
+      "Export": {
+        "Name": "IOT-PublicSubnet2"
+      }
+    },
+    "PublicSubnet3": {
+      "Description": "Subnet 3 ID",
+      "Value": {
+        "Ref": "PublicSubnet3"
+      },
+      "Export": {
+        "Name": "IOT-PublicSubnet3"
+      }
+    },
+    "PrivateSubnet1":{
+       "Description":"Private Subnet ID",
+       "Value":{
+          "Ref":"PrivateSubnet1"
+       },
+       "Export":{
+          "Name":"IOT-PrivateSubnet1"
+       }
+    },
+    "PrivateSubnet2":{
+      "Description":"Private Subnet ID",
+      "Value":{
+         "Ref":"PrivateSubnet2"
+      },
+      "Export":{
+         "Name":"IOT-PrivateSubnet2"
+      }
+   }
+ }
+}

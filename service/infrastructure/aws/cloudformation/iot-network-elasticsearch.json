@@ -1,0 +1,80 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Elasticsearch Cluster with Kibana\n",
+    "Parameters": {
+      "ElasticsearchDomainName": {
+        "Type": "String",
+        "AllowedPattern": "[a-z][a-z0-9]*",
+        "Description": "Name of Elasticsearch domain for sensor data [a-z][a-z0-9]*"
+      }
+    },
+    "Resources": {
+      "ElasticsearchDomain": {
+        "Type": "AWS::Elasticsearch::Domain",
+        "Properties": {
+          "DomainName": {
+            "Fn::Sub": "${ElasticsearchDomainName}"
+          },
+          "ElasticsearchVersion": "6.5",
+          "ElasticsearchClusterConfig": {
+            "InstanceCount": 1,
+            "InstanceType": "t2.small.elasticsearch"
+          },
+          "EBSOptions": {
+            "EBSEnabled": true,
+            "Iops": 0,
+            "VolumeSize": 10,
+            "VolumeType": "gp2"
+          },
+          "SnapshotOptions": {
+            "AutomatedSnapshotStartHour": 0
+          },
+          "AccessPolicies": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {
+                    "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:root"
+                  }
+                },
+                "Action": "es:*",
+                "Resource": {
+                  "Fn::Sub": "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/${ElasticsearchDomainName}/*"
+                }
+              }
+            ]
+          },
+          "AdvancedOptions": {
+            "indices.fielddata.cache.size": "",
+             "rest.action.multi.allow_explicit_index": "true"
+        }
+        }
+      }
+    },
+    "Outputs": {
+      "IOTNWDomainArn": {
+        "Value": {
+          "Fn::GetAtt": [
+            "ElasticsearchDomain",
+            "DomainArn"
+          ]
+        },
+        "Export": {
+          "Name": "IOTNWDomainArn"
+        }
+      },
+      "IOTNWDomainEndpoint": {
+        "Value": {
+          "Fn::GetAtt": [
+            "ElasticsearchDomain",
+            "DomainEndpoint"
+          ]
+        },
+        "Export": {
+          "Name": "IOTNWDomainEndpoint"
+        }
+      }
+    }
+  }

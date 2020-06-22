@@ -1,0 +1,103 @@
+[
+   {
+     "ParameterKey": "STACKNAME",
+     "ParameterValue": "REPLACE_STACK_NAME",
+     "UsePreviousValue": true
+   },
+   {
+     "ParameterKey": "APPENDER",
+     "ParameterValue": "iot-nw",
+     "UsePreviousValue": true
+   },
+   {
+     "ParameterKey": "VPCNAME",
+     "ParameterValue": "iotnw-vpc",
+     "UsePreviousValue": true
+   },
+   {
+     "ParameterKey": "VpcCIDR",
+     "ParameterValue": "10.0.0.0/16",
+     "UsePreviousValue": true
+   },
+   {
+     "ParameterKey": "PublicSubnet1CIDR",
+     "ParameterValue": "10.0.0.0/24",
+     "UsePreviousValue": true
+   },
+   {
+    "ParameterKey": "PublicSubnet2CIDR",
+    "ParameterValue": "10.0.1.0/24",
+    "UsePreviousValue": true
+  },
+  {
+    "ParameterKey": "PublicSubnet3CIDR",
+    "ParameterValue": "10.0.2.0/24",
+    "UsePreviousValue": true
+  },
+  {
+    "ParameterKey": "PublicSubnet4CIDR",
+    "ParameterValue": "10.0.3.0/24",
+    "UsePreviousValue": true
+  },
+  {  
+    "ParameterKey":"PrivateSubnet1CIDR",
+    "ParameterValue":"10.0.4.0/24",
+    "UsePreviousValue":true
+ },
+ {  
+  "ParameterKey":"PrivateSubnet2CIDR",
+  "ParameterValue":"10.0.5.0/24",
+  "UsePreviousValue":true
+  },
+   {
+     "ParameterKey": "IGNAME",
+     "ParameterValue": "iotnw-ig",
+     "UsePreviousValue": true
+   },
+   {
+     "ParameterKey": "PBRTNAME",
+     "ParameterValue": "iotnw-rt",
+     "UsePreviousValue": true
+   },
+   {
+     "ParameterKey": "PBSN1NAME",
+     "ParameterValue": "iotnw-pb-subnet-1",
+     "UsePreviousValue": true
+   },
+   {
+    "ParameterKey": "PBSN2NAME",
+    "ParameterValue": "iotnw-pb-subnet-2",
+    "UsePreviousValue": true
+  },
+  {
+    "ParameterKey": "PBSN3NAME",
+    "ParameterValue": "iotnw-pb-subnet-3",
+    "UsePreviousValue": true
+  },
+  {
+    "ParameterKey": "PBSN4NAME",
+    "ParameterValue": "iotnw-pb-subnet-4",
+    "UsePreviousValue": true
+  },
+   {  
+      "ParameterKey":"PRSN1NAME",
+      "ParameterValue":"iotnw-pr-subnet-1",
+      "UsePreviousValue":true
+   },
+   {  
+    "ParameterKey":"PRSN2NAME",
+    "ParameterValue":"iotnw-pr-subnet-2",
+    "UsePreviousValue":true
+ },
+   {  
+      "ParameterKey":"PR1RTNAME",
+      "ParameterValue":"iotnw-pr-rt-1",
+      "UsePreviousValue":true
+   },
+   {  
+      "ParameterKey":"PR2RTNAME",
+      "ParameterValue":"iotnw-pr-rt-2",
+      "UsePreviousValue":true
+   }
+ ]
+ 

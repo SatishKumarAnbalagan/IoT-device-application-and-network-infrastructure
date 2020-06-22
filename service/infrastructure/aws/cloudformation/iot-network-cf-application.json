@@ -1,0 +1,99 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Application stack for IOT network\n",
+    "Parameters":{
+      "keyname":{
+        "Description":"Key Name",
+        "Type":"String"
+      },
+      "AmiId":{
+        "Description":"AMI ID",
+        "Type":"String"
+      }
+    },
+   "Resources":{
+      "SecurityGroupWB":{
+         "Type":"AWS::EC2::SecurityGroup",
+         "Properties":{
+            "VpcId": {"Fn::ImportValue": "IOT-VPCID"},
+            "GroupDescription":"SecurityGroup to access webapplication",
+            "SecurityGroupIngress":[
+               {
+                  "CidrIp":"0.0.0.0/0",
+                  "Description":"To allow world for port 80",
+                  "FromPort":"80",
+                  "ToPort":"80",
+                  "IpProtocol":"TCP"
+               },
+               {
+                  "CidrIp":"0.0.0.0/0",
+                  "Description":"To allow world for port 22",
+                  "FromPort":"22",
+                  "ToPort":"22",
+                  "IpProtocol":"TCP"
+               },
+               {
+                  "CidrIp":"0.0.0.0/0",
+                  "Description":"To allow world for port 443",
+                  "FromPort":"443",
+                  "ToPort":"443",
+                  "IpProtocol":"TCP"
+               },
+               {
+                  "CidrIp":"0.0.0.0/0",
+                  "Description":"To allow world for port 9090",
+                  "FromPort":"9090",
+                  "ToPort":"9090",
+                  "IpProtocol":"TCP"
+               }
+            ],
+            "Tags":[
+               {
+                  "Key":"Name",
+                  "Value":"SecurityGroupWB"
+               }
+            ]
+          }
+        },
+      "EC2Instance":{
+         "Type":"AWS::EC2::Instance",
+         "Properties":{
+            "DisableApiTermination":"false",
+            "ImageId":{"Ref":"AmiId"},
+            "InstanceType":"t2.micro",
+            "SecurityGroupIds": [{"Fn::GetAtt": ["SecurityGroupWB","GroupId"]}],
+            "AvailabilityZone":"us-east-1a",
+            "SubnetId": {"Fn::ImportValue": "IOT-PublicSubnet1"},
+            "KeyName":{"Ref":"keyname"},
+            "Volumes":[
+               {
+                  "Device":"/dev/sda2",
+                  "VolumeId":{
+                     "Ref":"NewVolume"
+                  }
+               }
+            ],
+            "Tags":[
+               {
+                  "Key":"Name",
+                  "Value":"EC2Webapplication"
+               }
+            ]
+         }
+      },
+      "NewVolume":{
+         "Type":"AWS::EC2::Volume",
+         "Properties":{
+            "Size":"20",
+            "VolumeType":"gp2",
+            "AvailabilityZone":"us-east-1a",
+            "Tags":[
+               {
+                  "Key":"Name",
+                  "Value":"EC2AppVolume"
+               }
+            ]
+         }
+      }
+   }
+}
